@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <script src="loc.js"></script>
+</head>
+<body>
+    <div class="container">
+
+            <div class="duzenleme-alani">
+                
+            </div>
+            
+    </div>
+    <script>
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString); //urlsearchparams araştır
+        const id = urlParams.get('id');
+
+        function saveSorular(sorular) {
+            localStorage.setItem(SORULAR_KEY, JSON.stringify(sorular));
+        }
+
+        function formolustur(id) {
+            let sorular = getSorular();
+            const duzenlemeAlani = document.querySelector('.duzenleme-alani');
+
+            if (id !== null && sorular[id]) {
+                const soru = sorular[id];
+
+                duzenlemeAlani.innerHTML = `
+                    <form id="duzenleForm">
+                        <input type="hidden" name="id" value="${id}">
+                        
+                        <label for="sor">Soru</label>
+                        <input type="text" name="soru" value="${soru.soruMetni}" required><br>
+
+                        <label for="A">A Şıkkı:</label>
+                        <input type="text" name="A" value="${soru.sikklar[0]}" required><br>
+
+                        <label for="B">B Şıkkı:</label>
+                        <input type="text" name="B" value="${soru.sikklar[1]}" required><br>
+
+                        <label for="C">C Şıkkı:</label>
+                        <input type="text" name="C" value="${soru.sikklar[2]}" required><br>
+
+                        <label for="D">D Şıkkı:</label>
+                        <input type="text" name="D" value="${soru.sikklar[3]}" required><br>
+
+                        <label for="cevap">Doğru Cevap:</label>
+                        <input type="text" name="cevap" value="${soru.dogruCevap}" required><br>
+                        <button type="button" class="geri-don" onclick="goToPanel()">Geri</button>
+                        <button type="submit">Kaydet</button>
+                    </form>
+                `;
+
+                
+                document.getElementById('duzenleForm').addEventListener('submit', updateSoru);
+            } else {
+                duzenlemeAlani.innerHTML = '<p>Geçersiz ID veya soru bulunamadı.</p>';
+            }
+        }
+
+        // event işlemi buradaki yukardaki fonksiyon
+        function updateSoru(event) {
+            event.preventDefault();
+            const id = document.querySelector('input[name="id"]').value;
+            let sorular = getSorular();
+
+            if (sorular[id]) {
+                sorular[id] = {
+                    soruMetni: document.querySelector('input[name="soru"]').value,
+                    sikklar: [
+                        document.querySelector('input[name="A"]').value,
+                        document.querySelector('input[name="B"]').value,
+                        document.querySelector('input[name="C"]').value,
+                        document.querySelector('input[name="D"]').value
+                    ],
+                    dogruCevap: document.querySelector('input[name="cevap"]').value,
+                    puan: sorular[id].puan // puanı aynı bıraktık
+                };
+
+                saveSorular(sorular);
+                alert('soru başarıyla güncellendi');
+                goToPanel();
+            } else {
+                alert('hata');
+            }
+        }
+
+        // sayfa açılınca form kısmını yaz.
+        window.onload = function() {
+            formolustur(id);
+        }
+
+
+    </script>
+</body>
+</html>

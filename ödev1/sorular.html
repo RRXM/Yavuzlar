@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soru</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="loc.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2 id="soruBasligi"></h2>
+        <form id="soruForm">
+            <div id="siklar"></div>
+            <button type="button" id="nextButton">Next</button>
+        </form>
+
+    </div>
+    <script>
+        let sorular = getSorular();
+        let index = 0;
+        let puan = 0;
+
+        function showSoru(index) {
+            if (index >= sorular.length) {
+                alert('Tüm soruları tamamladın');
+                return;
+            }
+            let soru = sorular[index];
+            document.getElementById('soruBasligi').textContent = soru.soruMetni;
+            let siklarDiv = document.getElementById('siklar');
+            siklarDiv.innerHTML = ''; //bununla sürekli şıkları kaldırıyoruz yenileri altta ekleniyo.
+
+            soru.sikklar.forEach((sik, i) => {
+                let sikDiv = document.createElement('div');
+                let input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'sik';
+                input.value = sik;
+                input.id = `sik${i}`;
+                let label = document.createElement('label');
+                label.htmlFor = `sik${i}`;
+                label.textContent = sik;
+                sikDiv.appendChild(input);
+                sikDiv.appendChild(label);
+                siklarDiv.appendChild(sikDiv);
+            });
+        }
+
+        document.getElementById('nextButton').addEventListener('click', function() {
+            let secilensik = document.querySelector('input[name="sik"]:checked');
+            if (secilensik) {
+                let dogruCevap = sorular[index].dogruCevap;
+                if (secilensik.value === dogruCevap) {
+                    puan += sorular[index].puan;
+                }
+                index++;
+                if (index < sorular.length) {
+                    showSoru(index);
+                } else {
+                    alert(`Tüm soruları tamamladın puanın:${puan}`);
+                    window.location.href = 'index.html';
+                }
+            } else {
+                alert('Lütfen bir şık seç');
+            }
+        });
+
+        //ilk sorudan göstermeye başlıyoz burada
+        showSoru(index);
+    </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soru Ekle</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <script src="loc.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="duzenleme-alani">
+            <form id="soruEkleForm">
+                <label for="soru">Soru:</label>
+                <input type="text" id="soru" name="soru" required><br>
+
+                <label for="A">A Şıkkı:</label>
+                <input type="text" id="A" name="A" required><br>
+
+                <label for="B">B Şıkkı:</label>
+                <input type="text" id="B" name="B" required><br>
+
+                <label for="C">C Şıkkı:</label>
+                <input type="text" id="C" name="C" required><br>
+
+                <label for="D">D Şıkkı:</label>
+                <input type="text" id="D" name="D" required><br>
+
+                <label for="cevap">Doğru Cevap:</label>
+                <input type="text" id="cevap" name="cevap" required><br>
+
+                <label for="puan">Puan:</label>
+                <input type="number" id="puan" name="puan" required><br>
+
+                <button type="button" class="geri-don" onclick="goToPanel()">Geri</button>
+                <button type="submit">Kaydet</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('soruEkleForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const soruMetni = document.getElementById('soru').value;
+            const siklar = [
+                document.getElementById('A').value,
+                document.getElementById('B').value,
+                document.getElementById('C').value,
+                document.getElementById('D').value
+            ];
+            const dogruCevap = document.getElementById('cevap').value;
+            const puan = parseInt(document.getElementById('puan').value);
+
+            const yeniSoru = {
+                soruMetni: soruMetni,
+                sikklar: siklar,
+                dogruCevap: dogruCevap,
+                puan: puan
+            };
+
+            addSoru(yeniSoru);
+            alert('Soru başarıyla eklendi!');
+            window.location.href = 'panel.html'; // Soru eklendikten sonra panel sayfasına dön
+        });
+
+        function goToPanel() {
+            window.location.href = 'panel.html';
+        }
+    </script>
+</body>
+</html>
